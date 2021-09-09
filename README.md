@@ -8,6 +8,9 @@
 # Install dependencies
 npm install
 
+# Optimize and typescript to javascript
+npm run build
+
 # Run the bot
 npm start
 ```
@@ -20,6 +23,24 @@ docker build -t titan .
 
 # 2. Start container
 docker run -e APP_ID=<app-id> -e PRIVATE_KEY=<pem-value> titan
+```
+
+## Deploy
+
+```sh
+# 0. Create Heroku App at the first time
+heroku create
+
+# 1. Login to Heroku
+heroku login
+
+# 2. Configure Heroku App
+heroku config:set APP_ID=aaa \
+    WEBHOOK_SECRET=bbb \
+    PRIVATE_KEY="$(cat ~/Downloads/*.private-key.pem)"
+
+# 3. Update code and redeploy
+git push heroku master
 ```
 
 ## Contributing
