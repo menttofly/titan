@@ -7,13 +7,13 @@ export = (app: Probot, { getRouter } : ApplicationFunctionOptions) => {
             body: "Thanks for opening this issue! I will check it out later.",
         });
       
-        context.log.info("Receive issues opened event")
+        context.log.info("Receive issues opened event");
         await context.octokit.issues.createComment(comment);
     });
 
     /// Get an express router to expose new HTTP endpoints
     /// Use '!' to forced resolution in chained call
-    const router = getRouter!("/titanfallbot")
+    const router = getRouter!("/titanfallbot");
     
     /// Use build-in middleware
     router.use(express.static("public"))
