@@ -46,7 +46,8 @@ export = (app: Probot, { getRouter } : ApplicationFunctionOptions) => {
           })
 
           /// Set mismatched route's default handler 
-          .use((_req, res, _next) => {
+          .use((_, res, next) => {
               res.status(404).render("Not Found! Please check your endpoint")
+              next()
           })      
 };
