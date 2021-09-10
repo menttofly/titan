@@ -15,11 +15,11 @@ export = (app: Probot, { getRouter } : ApplicationFunctionOptions) => {
     /// Use '!' to forced resolution in chained call
     const router = getRouter!("/titanfallbot")
     
-    /// Use any middleware
+    /// Use build-in middleware
     router.use(express.static("public"))
           .use(express.json({ limit: "5mb" }))  
+          /// Middleware functions that appends the specified value to the HTTP response header field
           .use((_, res, next) => {
-              /// Appends the specified value to the HTTP response header field
               /// Support CROS request
               res.append("Access-Control-Allow-Origin", "*")
               res.append("Access-Control-Allow-Methods", ['GET', 'PUT', 'POST', 'DELETE'])
