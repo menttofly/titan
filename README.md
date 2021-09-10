@@ -34,7 +34,7 @@ heroku create
 # 1. Login to Heroku
 heroku login
 
-# 2. Configure Heroku App
+# 2. Configure Heroku App, or you can use .env file directly which may has a security risk
 heroku config:set APP_ID=aaa \
     WEBHOOK_SECRET=bbb \
     PRIVATE_KEY="$(cat ~/Downloads/*.private-key.pem)"
