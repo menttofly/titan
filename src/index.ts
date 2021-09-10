@@ -1,16 +1,47 @@
-import { Probot } from "probot";
+import { Probot, ApplicationFunctionOptions } from "probot";
+import * as express from "express";
 
-export = (app: Probot) => {
-  app.on("issues.opened", async (context) => {
-    const issueComment = context.issue({
-      body: "Thanks for opening this issue! I will check it out later.",
+export = (app: Probot, { getRouter } : ApplicationFunctionOptions) => {
+    app.on("issues.opened", async (context) => {
+        const comment = context.issue({
+            body: "Thanks for opening this issue! I will check it out later.",
+        });
+      
+        context.log.info("Receive issues opened event")
+        await context.octokit.issues.createComment(comment);
     });
-    context.log.info("Receive issues opened event")
-    await context.octokit.issues.createComment(issueComment);
-  });
-  // For more information on building apps:
-  // https://probot.github.io/docs/
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
+    /// Get an express router to expose new HTTP endpoints
+    /// Use '!' to forced resolution in chained call
+    const router = getRouter!("/titanfallbot")
+    
+    /// Use any middleware
+    router.use(express.static("public"))
+          .use(express.json({ limit: "5mb" }))  
+          .use((_, res, next) => {
+              /// Appends the specified value to the HTTP response header field
+              /// Support CROS request
+              res.append("Access-Control-Allow-Origin", "*")
+              res.append("Access-Control-Allow-Methods", ['GET', 'PUT', 'POST', 'DELETE'])
+              res.append("Access-Control-Allow-Headers", "*")
+              res.append("Access-Control-Max-Age", "300")
+              /// Move to next middleware
+              next()
+          })
+        
+          /// Add a new route
+          .get("/:event/:action/test", async (req, res) => {
+              const { event, action } = req.params
+              const { user_id } = req.query
+
+              const json = {
+                  user_id: user_id, 
+                  event: event, 
+                  action: action, 
+                  content: "hello world!"
+              }
+
+              req.log.info(`Trigger ${event} with ${action} for user: ${user_id}`)
+              res.send(json)
+          })
 };
