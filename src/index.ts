@@ -1,7 +1,7 @@
 import { Probot, ApplicationFunctionOptions } from "probot";
 import * as express from "express";
 
-export = (app: Probot, { getRouter } : ApplicationFunctionOptions) => {
+export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
     app.on("issues.opened", async (context) => {
         const comment = context.issue({
             body: "Thanks for opening this issue! I will check it out later.",
