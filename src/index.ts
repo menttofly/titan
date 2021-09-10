@@ -44,4 +44,9 @@ export = (app: Probot, { getRouter } : ApplicationFunctionOptions) => {
               req.log.info(`Trigger ${event} with ${action} for user: ${user_id}`)
               res.send(json)
           })   
+
+          .get("*", async (req, res) => {
+              req.log.warn("Mismatched request endpoint")
+              res.status(404).render("Not Found! Please check your endpoint")
+          })
 };
