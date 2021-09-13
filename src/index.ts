@@ -28,9 +28,9 @@ export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
             && !branch.startsWith("release")) {
             try {
                 await context.octokit.git.deleteRef({ owner, repo, ref })
-                context.log.info(`Merged branch ${owner}/${repo}/${ref} successfully deleted`)
-            } catch (error) { 
-                context.log.info(`Failed to delete branch ${owner}/${repo}/${ref}`)
+                context.log.info(`Merged PR's branch ${owner}/${repo}/${ref} deleted successfully`)
+            } catch (err: any) { 
+                context.log.warn(err, `Merged PR's branch ${owner}/${repo}/${ref} deleted failed`)
             }
         } else {
             context.log.info(`Keeping branch ${owner}/${repo}/${ref} after PR closed`)
