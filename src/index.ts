@@ -2,6 +2,8 @@ import { Probot, ApplicationFunctionOptions } from "probot";
 import * as express from "express";
 
 export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
+    
+    /// Observe issues open 
     app.on("issues.opened", async (context) => {
         const comment = context.issue({
             body: "Thanks for opening this issue! I will check it out later.",
@@ -10,6 +12,30 @@ export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
         context.log.info("Receive issues opened event");
         await context.octokit.issues.createComment(comment);
     });
+
+    /// Auto delete branch after PR being merged
+    app.on("pull_request.closed", async (context) => {
+        const owner = context.payload.repository.owner.login
+        const repo = context.payload.repository.name
+        const branch = context.payload.pull_request.head.ref
+        const ref = `heads/${branch}`
+
+        const merged = context.payload.pull_request.merged
+        if (merged 
+            /// Protected branch name
+            && branch != "main" 
+            && branch != "master" 
+            && !branch.startsWith("release")) {
+            try {
+                await context.octokit.git.deleteRef({ owner, repo, ref })
+                context.log.info(`Merged branch ${owner}/${repo}/${ref} successfully deleted`)
+            } catch (error) { 
+                context.log.info(`Failed to delete branch ${owner}/${repo}/${ref}`)
+            }
+        } else {
+            context.log.info(`Keeping branch ${owner}/${repo}/${ref} after PR closed`)
+        }
+    })
 
     /// Get an express router to expose new HTTP endpoints
     /// Use '!' to forced resolution in chained call
