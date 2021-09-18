@@ -43,6 +43,12 @@ heroku config:set APP_ID=aaa \
 git push heroku master
 ```
 
+## Permissions
+
+A bot requires some repository and organization permissions, such as webhook、pull request, and contents.
+- Read access to metadata
+- Read and write access to code, issues, pull requests, and repository hooks
+
 ## Contributing
 
 If you have suggestions for how titan could be improved, or want to report a bug, open an issue! We'd love all and any contributions.
