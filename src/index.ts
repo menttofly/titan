@@ -32,17 +32,16 @@ export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
     app.on("pull_request.closed", async (context) => {
         const owner = context.payload.repository.owner.login
         const repo = context.payload.repository.name
-        const branch = context.payload.pull_request.head.ref
-        const ref = `heads/${branch}`
+        const ref = context.payload.pull_request.head.ref
 
         const merged = context.payload.pull_request.merged
         context.log.info("Receive pull request closed event");
 
         if (merged 
             /// Protected branch name
-            && branch != "main" 
-            && branch != "master" 
-            && !branch.startsWith("release")) {
+            && ref != "main" 
+            && ref != "master" 
+            && !ref.startsWith("release")) {
             try {
                 await context.octokit.git.deleteRef({ owner, repo, ref })
                 context.log.info(`Merged PR's branch ${owner}/${repo}/${ref} deleted successfully`)
