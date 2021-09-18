@@ -1,6 +1,6 @@
 # titan
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that A Probot app
+> A bot built with [Probot](https://github.com/probot/probot), which can receive github webhook and interacting with GitHub 
 
 ## Setup
 
