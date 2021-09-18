@@ -18,6 +18,8 @@ export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
         const number = context.payload.number
         const owner = context.payload.repository.owner.login
         const repo = context.payload.repository.name
+
+        context.log.info("Receive pull request opened event");
         await context.octokit.issues.createComment({
             body: "Thanks for creating this PR!",
             issue_number: number,
@@ -34,6 +36,8 @@ export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
         const ref = `heads/${branch}`
 
         const merged = context.payload.pull_request.merged
+        context.log.info("Receive pull request closed event");
+
         if (merged 
             /// Protected branch name
             && branch != "main" 
