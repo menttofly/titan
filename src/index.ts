@@ -13,6 +13,19 @@ export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
         await context.octokit.issues.createComment(comment);
     });
 
+    /// Auto create a comment when a new PR opened
+    app.on("pull_request.opened", async (context) => {
+        const number = context.payload.number
+        const owner = context.payload.repository.owner.login
+        const repo = context.payload.repository.name
+        await context.octokit.issues.createComment({
+            body: "Thanks for creating this PR!",
+            issue_number: number,
+            owner,
+            repo
+        })
+    });
+
     /// Auto delete branch after PR being merged
     app.on("pull_request.closed", async (context) => {
         const owner = context.payload.repository.owner.login
@@ -35,7 +48,7 @@ export = (app: Probot, { getRouter }: ApplicationFunctionOptions) => {
         } else {
             context.log.info(`Keeping branch ${owner}/${repo}/${ref} after PR closed`)
         }
-    })
+    });
 
     /// Get an express router to expose new HTTP endpoints
     /// Use '!' to forced resolution in chained call
