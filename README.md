@@ -45,7 +45,7 @@ git push heroku master
 
 ## Permissions
 
-A bot requires some repository and organization permissions, such as webhook、pull request, and contents.
+A bot requires some repository and organization permissions, such as webhook、pull request, and contents on your account.
 - Read access to metadata
 - Read and write access to code, issues, pull requests, and repository hooks
 
